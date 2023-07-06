@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Spring Boot Thymeleaf Application - Bootstrap Price Range Slider</title>
+
+    <link th:rel="stylesheet" th:href="@{assets/bootstrap-slider/css/bootstrap-slider.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.11.2/css/all.css} "/>
+</head>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">Thymeleaf - Bootstrap Price Range Slider</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col">
+
+
+            <div class="row" th:fragment="list" xmlns:th="http://www.thymeleaf.org">
+                <div th:each="card: ${cards}" class="col-sm-4">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${card.number}">Product name</h5>
+                            <p class="card-text" th:text="${card.date}">Price</p>
+                            <p class="card-text" th:text="${card.currency}">Price</p>
+                            <p class="card-text" th:text="${card.balance}">Price</p>
+                            <!--<a href="#" class="btn btn-primary">Buy</a>-->
+
+                            <div class="card mb-3">
+                                <form th:action="@{/cardPage/} + ${{card.id}}" method="get">
+                                    <button th:id="'table_entry_childs_button_' + ${card.id}" type="submit">
+                                        <i>Card Page</i>
+                                    </button>
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </form>
+            <div class="card mb-3">
+                <a href="/newCard" class="btn btn-primary">Add Card</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script th:rel="stylesheet" th:src="@{assets/bootstrap-slider/bootstrap-slider.js}"></script>
+
+<script>
+    $("#priceRange").slider({});
+    $("#priceRange").on("slideStop", function (stopEvent) {
+        var range = stopEvent.value;
+        $("#rangeMin").val(range[0]);
+        $("#rangeMax").val(range[1]);
+
+        $.get("/products?min=" + range[0] + "&max=" + range[1], function (data) {
+            $("#products").html(data);
+        });
+    });
+</script>
+
+</body>
+</html>
